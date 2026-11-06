@@ -6,14 +6,12 @@ var SP=(function(){var p=[];for(var i=0;i<10;i++){var r=i%2?20:46,a=-Math.PI/2+i
 function star(sz){var C=[['#f6f3ec','#222'],['#a63a3a','#fff'],['#a07a2a','#fff'],['#9a9a9a','#222']],c=C[Math.floor(Math.random()*4)],d='';for(var i=0;i<9;i++){var a=Math.random()*6.28,r=Math.random()*22;d+='<circle cx="'+(Math.cos(a)*r).toFixed(1)+'" cy="'+(Math.sin(a)*r).toFixed(1)+'" r="2.4" fill="'+c[1]+'"/>'}return '<svg width="'+sz+'" height="'+sz+'" viewBox="-50 -50 100 100" style="filter:drop-shadow(0 3px 4px rgba(0,0,0,.45))"><polygon points="'+SP+'" fill="'+c[0]+'" stroke="#fff" stroke-width="3" stroke-linejoin="round"/>'+d+'</svg>'}
 function openRem(){
  if(document.getElementById("remScr"))return;showBack(true);
- var fl=document.createElement("link");fl.rel="stylesheet";fl.href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&display=swap";document.head.appendChild(fl);
  if(!AUD){AUD=new Audio(ALF);AUD.loop=true}
- AUD.muted=true;var pr=AUD.play();if(pr&&pr.then)pr.then(function(){AUD.pause();AUD.currentTime=0;AUD.muted=false}).catch(function(){AUD.muted=false});
  var s=document.createElement("div");s.id="remScr";
- s.innerHTML='<div class="rl"><p>Cuz You Have Forgetting Ki Bimari...</p><div class="rz">🤪</div></div>';
- s.style.backgroundImage="url("+LILYBG+")";document.body.appendChild(s);
+ document.body.appendChild(s);
+ showFilm();
  requestAnimationFrame(function(){requestAnimationFrame(function(){s.style.opacity=1})});
- remT=setTimeout(showFilm,5000)}
+}
 function showFilm(){
  var s=document.getElementById("remScr");if(!s)return;
  s.style.backgroundImage="none";s.style.background="#0e0b0d";
