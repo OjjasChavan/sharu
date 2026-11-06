@@ -15,7 +15,7 @@ function openRem(){
 function showFilm(){
  var s=document.getElementById("remScr");if(!s)return;
  s.style.backgroundImage="none";s.style.background="#0e0b0d";
- s.innerHTML='<div class="rw" id="rw"><div class="rs" id="rs"></div><div class="rg"></div><div class="rv"></div><div class="rtw"><div class="rtag" id="rtag">you’re so beautiful and how much i adore you<br><span style="color:#d62874;letter-spacing:.12em">♡♡♡</span></div><i class="tp a"></i><i class="tp b"></i></div><div class="rh" id="rh">tap the record ♪</div><div class="rd" id="rd"><b><u>alfaaz</u></b></div></div>';
+ s.innerHTML='<div class="rw" id="rw"><div class="rs" id="rs"></div><div class="rg"></div><div class="rv"></div><div class="rtw"><div class="rtag" id="rtag" style="font-size:36px">Happy Diwali Sharu ♡</div><i class="tp a"></i><i class="tp b"></i></div><div class="rh" id="rh">tap the record ♪</div><div class="rd" id="rd"><b><u>alfaaz</u></b></div></div>';
  var rw=document.getElementById("rw"),W=rw.clientWidth,PH=Math.round(W*.92),ord=[1,2,9,3,6,0,4,10,5,7,11,8],h='';
  for(var rep=0;rep<2;rep++)for(var i=0;i<ord.length;i++){
   h+='<div class="rp"><img src="'+RP[ord[i]]+'" alt=""><div class="rtw2"><div class="rt" style="clip-path:'+polyEdge()+'"></div></div>';
@@ -24,6 +24,7 @@ function showFilm(){
   h+='</div>'}
  var rs=document.getElementById("rs");rs.innerHTML=h;rs.style.animationDuration=(ord.length*PH/46)+'s';
  document.getElementById("rtag").style.clipPath=polyTag();
+ startFireworks(rw);
  var rd=document.getElementById("rd"),rh=document.getElementById("rh");
  AUD.currentTime=0;AUD.muted=false;var p=AUD.play();
  if(p&&p.catch)p.catch(function(){rd.classList.add("paused");rh.classList.add("on")});
