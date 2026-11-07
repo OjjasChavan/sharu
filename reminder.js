@@ -7,10 +7,9 @@ function star(sz){var C=[['#f6f3ec','#222'],['#a63a3a','#fff'],['#a07a2a','#fff'
 function openRem(){
  if(document.getElementById("remScr"))return;showBack(true);
  if(!AUD){AUD=new Audio(ALF);AUD.loop=true}
- var s=document.createElement("div");s.id="remScr";
+ var s=document.createElement("div");s.id="remScr";s.style.opacity=1;
  document.body.appendChild(s);
- showFilm();
- requestAnimationFrame(function(){requestAnimationFrame(function(){s.style.opacity=1})});
+ try{showFilm()}catch(e){console.error("showFilm failed:",e)}
 }
 function showFilm(){
  var s=document.getElementById("remScr");if(!s)return;
@@ -24,7 +23,7 @@ function showFilm(){
   h+='</div>'}
  var rs=document.getElementById("rs");rs.innerHTML=h;rs.style.animationDuration=(ord.length*PH/46)+'s';
  document.getElementById("rtag").style.clipPath=polyTag();
- startFireworks(rw);
+ if(typeof startFireworks==="function")startFireworks(rw);
  var rd=document.getElementById("rd"),rh=document.getElementById("rh");
  AUD.currentTime=0;AUD.muted=false;var p=AUD.play();
  if(p&&p.catch)p.catch(function(){rd.classList.add("paused");rh.classList.add("on")});
