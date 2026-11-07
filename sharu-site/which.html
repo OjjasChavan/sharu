@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sharannya, which one is it?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #3b1a5a;
+    --bg2: #5b2a86;
+    --pink: #ff7eb6;
+    --butter: #ffe27a;
+    --ink: #fff7fb;
+    --deep: #2a0f42;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    color-scheme: dark;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: "Fredoka", "Trebuchet MS", system-ui, sans-serif;
+    color: var(--ink);
+    background: radial-gradient(circle at 20% 15%, var(--bg2), var(--bg) 60%);
+    overflow: hidden;
+  }
+  main {
+    min-height: 100%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 24px; gap: 36px;
+  }
+  h1 {
+    font-size: clamp(2rem, 7vw, 4rem);
+    line-height: 1.15; margin: 0; font-weight: 700; max-width: 14em;
+    text-shadow: 0 4px 0 var(--deep);
+  }
+  .name { color: var(--butter); display: block; }
+  .row { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; align-items: center; }
+  button {
+    font: inherit; font-weight: 700; font-size: clamp(1.15rem, 4vw, 1.5rem);
+    border: 0; border-radius: 999px; padding: 16px 34px; cursor: pointer;
+    color: var(--deep); box-shadow: 0 6px 0 var(--deep);
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  button:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--deep); }
+  button:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+  #love { background: var(--pink); }
+  #love:hover { background: #ff97c4; }
+  #like { background: var(--butter); position: relative; }
+  #like::after {
+    content: ""; position: absolute; left: 6%; right: 6%; bottom: -22px; height: 14px; pointer-events: none;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 14' preserveAspectRatio='none'%3E%3Cpath d='M3 9 Q14 1 25 9 T47 9 T69 9 T91 9 T113 9 T135 9 T157 9 T179 9 T197 8' fill='none' stroke='%23ffe27a' stroke-width='3.5' stroke-linecap='round'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+  }
+  #like.free { position: fixed; z-index: 5; transition: left .28s cubic-bezier(.3,1.6,.5,1), top .28s cubic-bezier(.3,1.6,.5,1); }
+  #slot { display: none; }
+  #slot.on { display: inline-block; }
+  #taunt { min-height: 1.6em; margin: 0; font-size: 1.1rem; color: var(--butter); }
+
+  #yes {
+    position: fixed; inset: 0; z-index: 20; display: none;
+    align-items: center; justify-content: center; padding: 24px; text-align: center;
+    background: rgba(42, 15, 66, .86);
+  }
+  #yes.on { display: flex; }
+  #yes h2 {
+    margin: 0; font-size: clamp(2.2rem, 9vw, 5.5rem); line-height: 1.1; color: var(--pink);
+    text-shadow: 0 5px 0 var(--deep); animation: pop .6s cubic-bezier(.2,1.8,.4,1) both;
+  }
+  @keyframes pop { from { transform: scale(.2) rotate(-8deg); opacity: 0; } to { transform: scale(1) rotate(0); opacity: 1; } }
+  .heart { position: fixed; top: -40px; z-index: 25; pointer-events: none; animation: fall linear forwards; }
+  @keyframes fall { to { transform: translateY(115vh) rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) {
+    #yes h2 { animation: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1><span class="name">Sharannya,</span>what do you think which one is it?</h1>
+  <div class="row">
+    <button id="love" type="button">I love you</button>
+    <span id="slot"></span>
+    <button id="like" type="button">I like you</button>
+  </div>
+  <p id="taunt" aria-live="polite"></p>
+</main>
+
+<div id="yes" role="alert"><h2>YESS IDIOT I LOVE YOU 😭</h2></div>
+
+<script>
+(function () {
+  var love = document.getElementById('love');
+  var like = document.getElementById('like');
+  var slot = document.getElementById('slot');
+  var taunt = document.getElementById('taunt');
+  var yes = document.getElementById('yes');
+  var moved = false, count = 0, done = false;
+  var lines = ['Nope, not that one 😏', 'Too slow!', 'Haha, almost.', 'Wrong button, Sharannya 🙈', 'It really doesn’t want to be clicked.', 'Have you tried the other one? 👀', 'Give up and click the pink one 💗'];
+  var px = -999, py = -999;
+
+  function dodge() {
+    if (done) return;
+    var r = like.getBoundingClientRect();
+    if (!moved) {
+      moved = true;
+      slot.style.width = r.width + 'px';
+      slot.style.height = r.height + 'px';
+      slot.classList.add('on');
+      like.style.left = r.left + 'px';
+      like.style.top = r.top + 'px';
+      like.classList.add('free');
+      void like.offsetWidth;
+    }
+    var w = like.offsetWidth, h = like.offsetHeight, pad = 12;
+    var maxX = window.innerWidth - w - pad, maxY = window.innerHeight - h - pad;
+    var lr = love.getBoundingClientRect();
+    var x = pad, y = pad;
+    for (var i = 0; i < 40; i++) {
+      x = pad + Math.random() * Math.max(0, maxX - pad);
+      y = pad + Math.random() * Math.max(0, maxY - pad);
+      var cx = x + w / 2, cy = y + h / 2;
+      var farFromPointer = Math.hypot(cx - px, cy - py) > 200;
+      var clearOfLove = x > lr.right + 20 || x + w < lr.left - 20 || y > lr.bottom + 20 || y + h < lr.top - 20;
+      if (farFromPointer && clearOfLove) break;
+    }
+    like.style.left = x + 'px';
+    like.style.top = y + 'px';
+    taunt.textContent = lines[count % lines.length];
+    count++;
+  }
+
+  ['pointerenter', 'mouseover', 'focus', 'pointerdown'].forEach(function (ev) {
+    like.addEventListener(ev, function (e) {
+      if (e.clientX !== undefined) { px = e.clientX; py = e.clientY; }
+      dodge();
+    });
+  });
+  like.addEventListener('touchstart', function (e) {
+    e.preventDefault();
+    var t = e.touches[0]; px = t.clientX; py = t.clientY;
+    dodge();
+  }, { passive: false });
+  like.addEventListener('click', function (e) { e.preventDefault(); dodge(); });
+
+  // Dodge before the pointer even touches it
+  document.addEventListener('pointermove', function (e) {
+    px = e.clientX; py = e.clientY;
+    if (done) return;
+    var r = like.getBoundingClientRect();
+    var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    if (Math.hypot(px - cx, py - cy) < Math.max(r.width, r.height) * 0.9) dodge();
+  });
+
+  window.addEventListener('resize', function () {
+    if (!moved) return;
+    var r = like.getBoundingClientRect();
+    if (r.right > window.innerWidth || r.bottom > window.innerHeight) dodge();
+  });
+
+  love.addEventListener('click', function () {
+    done = true;
+    like.style.display = 'none';
+    yes.classList.add('on');
+    var hearts = ['💗', '💖', '💕', '😭', '💘', '❤️'];
+    for (var i = 0; i < 40; i++) {
+      var h = document.createElement('span');
+      h.className = 'heart';
+      h.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+      h.style.left = Math.random() * 100 + 'vw';
+      h.style.fontSize = (20 + Math.random() * 30) + 'px';
+      h.style.animationDuration = (2.5 + Math.random() * 3) + 's';
+      h.style.animationDelay = (Math.random() * 1.8) + 's';
+      document.body.appendChild(h);
+    }
+  });
+})();
+</script>
+</body>
+</html>
